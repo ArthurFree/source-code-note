@@ -1,4 +1,8 @@
-
+/**
+ * 参考
+ * http://codeduan.com/posts/zepto.html
+ * https://github.com/JiayiLi/source-code-study
+ */
 var class2type = {};
 toString = class2type.toString;
 
@@ -90,9 +94,32 @@ function isEmptyObject(obj) {
         fragmentRE = /^\s*<(\w+|!)[^>]*>/,
         // 匹配非嵌套标签，eg.div><p></p></div> => 无， <br>, <br />, <h3></h3> => 可以匹配
         singleTagRE = /^<(\w+)\s*\/?>(?:<\/\1>|)$/,
-        // 
+        // 匹配自闭和标签，将 <p/>或<p />，替换为 <p></p>，将<p abc/>替换为<p>abc</p> 但 <input/> （在 tagExpanderRE 中定义）的不替换
+        tagExpanderRE = /<(?!area|br|col|embed|hr|img|input|link|meta|param)(([\w:]+)[^>]*)\/>/ig,
+        // body html
+        rootNodeRE = /^(?:body|html)$/i,
+        // 大写字母
+        capitalRE = /([A-Z])/g,
+        // 通过function调用来设置/获取的特殊属性
+        methodAttributes = ['val', 'css', 'html', 'text', 'data', 'width', 'height', 'offset'],
 
+        adjacencyOperators = ['after', 'prepend', 'before', 'append'],
+        table = document.createElement('table'),
+        tableRow = document.createElement('tr'),
 
+        // 指定特殊元素的容器
+        containers = {
+            'tr': document.createElement('tbody'),
+            'tbody': table,
+            'thead': table,
+            'tfoot': table,
+            'td': tableRow,
+            'th': tableRow,
+            '*': document.createElement('div')
+        },
+
+        // 匹配一个包括（字母、数组、下划线、-）的字符串
+        simpleSelectorRE = /^[\w-]*$/,
 
 
 
